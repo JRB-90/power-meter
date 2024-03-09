@@ -26,3 +26,6 @@ nRF5_addExecutable(blinky
     "${NRF5_LINKER_SCRIPT}" 
     ".rtt"
 )
+
+set(bootloader_vars "")
+#nRF5_addSecureBootloader(${target} "${PUBLIC_KEY}" "${bootloader_vars}")
