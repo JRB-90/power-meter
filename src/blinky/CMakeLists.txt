@@ -1,17 +1,28 @@
 cmake_minimum_required(VERSION 3.19)
 
+set(IC "nRF52840" CACHE STRING "IC")
+set(PLATFORM "nrf52840_xxAA"  CACHE STRING "Platform")
+set(SOFTDEVICE_TYPE "s140" CACHE STRING "SoftDevice type")
+set(SOFTDEVICE_VERSION "7.2.0" CACHE STRING "SoftDevice version")
+
+include("${nRF5_CMAKE_FILE_PATH}")
+nRF5_setup()
+
 project(blinky)
 
-set(NRF5_LINKER_SCRIPT "${CMAKE_CURRENT_SOURCE_DIR}/gcc_nrf52.ld" CACHE FILEPATH "Linker script file. If not specified, a generic script for a selected target will be used.")
-set(NRF5_SDKCONFIG_PATH "${CMAKE_CURRENT_SOURCE_DIR}/sdk_config.h" CACHE PATH "Path to the sdk_config.h file. If not specified, a generic sdk_config.h for a selected target file will be used.")
-
-add_executable(blinky
-    main.c
+list(APPEND SOURCE_FILES
+    "${CMAKE_CURRENT_SOURCE_DIR}/main.c"
 )
 
-target_link_libraries(blinky PRIVATE
-    nrf5_boards
-    nrf5_delay
+list(APPEND INCLUDE_DIRS
+    "${CMAKE_CURRENT_SOURCE_DIR}"
 )
 
-nrf5_target(blinky)
+set(NRF5_LINKER_SCRIPT "${CMAKE_CURRENT_SOURCE_DIR}/gcc_nrf52")
+
+nRF5_addExecutable(blinky
+    "${SOURCE_FILES}" 
+    "${INCLUDE_DIRS}" 
+    "${NRF5_LINKER_SCRIPT}" 
+    ".rtt"
+)

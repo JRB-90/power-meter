@@ -1,18 +1,19 @@
 cmake_minimum_required(VERSION 3.19)
 
-list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
+list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/nRF5-cmake-scripts)
 
-set(TOOLCHAIN_PREFIX "$ENV{ARM_NONE_EABI_FOLDER}" CACHE PATH "Path to folder containing the Arm embedded compiler")
-set(CMAKE_TOOLCHAIN_FILE "${CMAKE_CURRENT_SOURCE_DIR}/cmake/arm-none-eabi.cmake" CACHE FILEPATH "File to set toolchain parameters")
-set(NRF5_TARGET "nrf52840_xxaa" CACHE STRING "Target chip to compile for")
-set(NRF5_SDK_CONTAINER_PATH "${CMAKE_CURRENT_SOURCE_DIR}/nrf-sdk" CACHE PATH "Path to folder containing the NRF SDKs")
-set(NRF5_SDK_PATH "" CACHE PATH "Path to folder containing the NRF SDK")
-set(NRF5_SOFTDEVICE_VARIANT "s340" CACHE STRING "Softdevice version to use")
+set(CMAKE_TOOLCHAIN_FILE "${CMAKE_SOURCE_DIR}/nRF5-cmake-scripts/nRF5-cmake-toolchain.cmake" CACHE FILEPATH "Toolchain setup file for GNU Arm Embedded compiler")
+set(nRF5_CMAKE_PATH "${CMAKE_CURRENT_LIST_DIR}/nRF5-cmake-scripts" CACHE FILEPATH "")
+set(nRF5_CMAKE_FILE_PATH "${nRF5_CMAKE_PATH}/nRF5-cmake.cmake" CACHE FILEPATH "")
+set(nRF5_SDK_VERSION "nRF5_SDK_17.1.0_ddde560" CACHE STRING "nRF5 SDK")
+set(nRF5_MESH_SDK_VERSION "500" CACHE STRING "nRF5 Mesh SDK version")
 
-include(utils)
-find_first_folder_in_directory(${NRF5_SDK_CONTAINER_PATH} NRF5_SDK_PATH)
+# set(IC "nRF52840" CACHE STRING "IC")
+# set(PLATFORM "nrf52840_xxAA"  CACHE STRING "Platform")
+# set(SOFTDEVICE_TYPE "s140" CACHE STRING "SoftDevice type")
+# set(SOFTDEVICE_VERSION "7.2.0" CACHE STRING "SoftDevice version")
 
-project(cmake_nrf)
+project(power-meter C ASM)
 
 include_directories(boards)
 add_compile_definitions(
@@ -21,6 +22,6 @@ add_compile_definitions(
     "-DUSE_APP_CONFIG"
 )
 
-include(nrf5)
-
-add_subdirectory(src)
+if(NOT TARGET download)
+    add_subdirectory("src")
+endif()

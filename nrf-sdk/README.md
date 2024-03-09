@@ -1,1 +1,0 @@
-You should put the NRF SDK you wish to use in this folder
